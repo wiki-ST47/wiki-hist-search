@@ -1,0 +1,96 @@
+<form action="{% url 'search' %}" method="get" autocomplete="off">
+  {% if form.errors %}
+    <p class="form-error">Please correct the error(s) below:</p>
+    <ul>
+      {% for error in form.non_field_errors %}
+      <li class="form-error">{{ error }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+  <div class="form-row">
+    {% with form.page as this_field %}
+      <div class="form-group col-md-4">
+        <label for="id_{{ this_field.html_name }}">{{ this_field.label }}</label>
+        {% if this_field.errors %}<span class="form-error">{% for error in this_field.errors %}{{ error }}{% if not forloop.last %}<br>{% endif %}{% endfor %}</span>{% endif %}
+        <input type="text" class="form-control" name="{{ this_field.html_name }}" id="id_{{ this_field.html_name }}" {% if this_field.value %}value="{{ this_field.value }}"{% endif %} required>
+      </div>
+    {% endwith %}
+    {% with form.search as this_field %}
+      <div class="form-group col-md-4">
+        <label for="id_{{ this_field.html_name }}">{{ this_field.label }}</label>
+        {% if this_field.errors %}<span class="form-error">{% for error in this_field.errors %}{{ error }}{% if not forloop.last %}<br>{% endif %}{% endfor %}</span>{% endif %}
+        <input type="text" class="form-control" name="{{ this_field.html_name }}" id="id_{{ this_field.html_name }}" {% if this_field.value %}value="{{ this_field.value }}"{% endif %} required>
+      </div>
+    {% endwith %}
+    {% with form.case_insensitive as this_field %}
+      <div class="form-group col-md-2">
+        <label for="id_{{ this_field.html_name }}_wrap">{{ this_field.label }}</label>
+        {% if this_field.errors %}<span class="form-error">{% for error in this_field.errors %}{{ error }}{% if not forloop.last %}<br>{% endif %}{% endfor %}</span>{% endif %}
+        <div class="btn-group btn-group-toggle form-btn-group" id="id_{{ this_field.html_name }}_wrap" data-toggle="buttons">
+          {% for choice in this_field %}
+            <label class="btn btn-form {% if choice.data.selected %}active{% endif %}">
+              <input type="radio" name="{{ this_field.html_name }}" value="{{ choice.data.value }}" autocomplete="off" {% if choice.data.selected %}checked{% endif %}>
+              {{ choice.data.label }}
+            </label>
+          {% endfor %}
+        </div>
+      </div>
+    {% endwith %}
+    {% with form.regex_search as this_field %}
+      <div class="form-group col-md-2">
+        <label for="id_{{ this_field.html_name }}_wrap">{{ this_field.label }}</label>
+        {% if this_field.errors %}<span class="form-error">{% for error in this_field.errors %}{{ error }}{% if not forloop.last %}<br>{% endif %}{% endfor %}</span>{% endif %}
+        <div class="btn-group btn-group-toggle form-btn-group" id="id_{{ this_field.html_name }}_wrap" data-toggle="buttons">
+          {% for choice in this_field %}
+            <label class="btn btn-form {% if choice.data.selected %}active{% endif %}">
+              <input type="radio" name="{{ this_field.html_name }}" value="{{ choice.data.value }}" autocomplete="off" {% if choice.data.selected %}checked{% endif %}>
+              {{ choice.data.label }}
+            </label>
+          {% endfor %}
+        </div>
+      </div>
+    {% endwith %}
+  </div>
+  <div class="form-row">
+    {% with form.wiki_url as this_field %}
+      <div class="form-group col-md-4">
+        <label for="id_{{ this_field.html_name }}">{{ this_field.label }}</label>
+        {% if this_field.errors %}<span class="form-error">{% for error in this_field.errors %}{{ error }}{% if not forloop.last %}<br>{% endif %}{% endfor %}</span>{% endif %}
+        <input type="text" class="form-control" name="{{ this_field.html_name }}" id="id_{{ this_field.html_name }}" {% if this_field.value %}value="{{ this_field.value }}"{% endif %} placeholder="en.wikipedia.org">
+        <small class="form-text text-muted">Defaults to the English Wikipedia.</small>
+      </div>
+    {% endwith %}
+    {% with form.start_id as this_field %}
+      <div class="form-group col-md-3">
+        <label for="id_{{ this_field.html_name }}">{{ this_field.label }}</label>
+        {% if this_field.errors %}<span class="form-error">{% for error in this_field.errors %}{{ error }}{% if not forloop.last %}<br>{% endif %}{% endfor %}</span>{% endif %}
+        <input type="number" class="form-control" name="{{ this_field.html_name }}" id="id_{{ this_field.html_name }}" {% if this_field.value %}value="{{ this_field.value }}"{% endif %} placeholder="latest">
+      </div>
+    {% endwith %}
+    {% with form.to_search as this_field %}
+      <div class="form-group col-md-3">
+        <label for="id_{{ this_field.html_name }}">{{ this_field.label }}</label>
+        {% if this_field.errors %}<span class="form-error">{% for error in this_field.errors %}{{ error }}{% if not forloop.last %}<br>{% endif %}{% endfor %}</span>{% endif %}
+        <input type="number" class="form-control" name="{{ this_field.html_name }}" id="id_{{ this_field.html_name }}" {% if this_field.value %}value="{{ this_field.value }}"{% endif %} placeholder="200">
+        <small class="form-text text-muted">Expect slow performance when requesting more than a few hundred.</small>
+      </div>
+    {% endwith %}
+    {% with form.intent as this_field %}
+      <div class="form-group col-md-2">
+        <label for="id_{{ this_field.html_name }}_wrap">{{ this_field.label }}</label>
+        {% if this_field.errors %}<span class="form-error">{% for error in this_field.errors %}{{ error }}{% if not forloop.last %}<br>{% endif %}{% endfor %}</span>{% endif %}
+        <div class="btn-group btn-group-toggle form-btn-group" id="id_{{ this_field.html_name }}_wrap" data-toggle="buttons">
+          {% for choice in this_field %}
+            <label class="btn btn-form {% if choice.data.selected %}active{% endif %}">
+              <input type="radio" name="{{ this_field.html_name }}" value="{{ choice.data.value }}" autocomplete="off" {% if choice.data.selected %}checked{% endif %}>
+              {{ choice.data.label }}
+            </label>
+          {% endfor %}
+        </div>
+        <small class="form-text text-muted">Yes if you're OSing, no if you're RevDeling.</small>
+      </div>
+    {% endwith %}
+  </div>
+  <button type="submit" class="btn btn-primary">Search</button>
+</form>
+

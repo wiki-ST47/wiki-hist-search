@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% block title %}Search Results{% endblock %}
+{% block content %}
+  {% include 'hist_search/search_form.html' with form=form %}
+
+  <p>To use the following "quick" links, you need <a href="https://en.wikipedia.org/wiki/User:Enterprisey/url-select-revdel.js">Enterprisey's URL-Select-RevDel script</a>.</p>
+
+  <div class="btn-toolbar" role="toolbar">
+    <a class="btn btn-outline-primary" href="{{ rev_url }}">Select {{ rev_count }} Matching Revisions</a>
+    <a class="btn btn-outline-primary" href="{{ es_url }}">Select {{ es_count }} Matching Edit Summaries</a>
+    <a class="btn btn-outline-secondary" href"{{ log_url }}">Don't forget to check the logs!</a>
+  </div>
+
+  <p>Key: XX = Search term matched; RD = content already revdeled; OS = content already suppressed. Red background = match and not already OSed (not already RDed if "Include Revdeled revisions" is selected); green background = match and already OSed/RDed; white background = no match.<p>
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col" class="revision" colspan="2">Text</th>
+        <th scope="col" class="revision" colspan="2">Summ</th>
+        <th scope="col">Timestamp</th>
+        <th scope="col">User</th>
+        <th scope="col">Summary</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for rev in revlist %}
+        <tr>
+          <td class="revision {% if rev.match_rev %}revision_match {% if rev.rev_handled %}revision_handled{% endif %}{% endif %}">
+            {% if rev.match_rev %}XX{% endif %}
+          </td>
+          <td class="revision {% if rev.match_rev %}revision_match {% if rev.rev_handled %}revision_handled{% endif %}{% endif %}">
+            {% if rev.texthidden %}{% if rev.suppressed %}OS{% else %}RD{% endif %}{% endif %}
+          </td>
+          <td class="revision {% if rev.match_es %}revision_match {% if rev.es_handled %}revision_handled{% endif %}{% endif %}">
+            {% if rev.match_es %}XX{% endif %}
+          </td>
+          <td class="revision {% if rev.match_es %}revision_match {% if rev.es_handled %}revision_handled{% endif %}{% endif %}">
+            {% if rev.commenthidden %}{% if rev.suppressed %}OS{% else %}RD{% endif %}{% endif %}
+          </td>
+          <td>
+            <a href="{{ indexphp }}?oldid={{ rev.rev.revid }}&diff=prev">(prev)</a> |
+            <a href="{{ indexphp }}?oldid={{ rev.rev.revid }}">{{ rev.rev.timestamp }}</a>
+          </td>
+          <td>
+            <a href="{{ indexphp }}?title=User:{{ rev.rev.user }}">{{ rev.rev.user }}</a>
+            (<a href="{{ indexphp }}?title=User talk:{{ rev.rev.user }}">talk</a> |
+            <a href="{{ indexphp }}?title=Special:Contributions/{{ rev.rev.user }}">contribs</a>)
+          </td>
+          <td>
+            {{ rev.rev.comment }}
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

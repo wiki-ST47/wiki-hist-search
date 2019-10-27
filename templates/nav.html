@@ -1,0 +1,27 @@
+<header class="navbar navbar-expand navbar-dark flex-column flex-md-row app-navbar">
+  <a class="navbar-brand mr-0 mr-md-2" href="{% url 'home' %}">
+    <b>History Search</b> | for RevDel and Oversight
+  </a>
+  <div class="navbar-nav flex-row">
+    {% include 'nav-item.html' with path='home' text='Homepage' %}
+    {% include 'nav-item.html' with path='docs' text='Documentation' %}
+    {% include 'nav-item.html' with href_url='https://github.com/wiki-ST47/wiki-os-scan/' text='GitHub' %}
+    {% if request.user.is_superuser %}
+      {% include 'nav-item.html' with path='admin:index' text='Admin' %}
+    {% endif %}
+  </div>
+  {% if request.user.is_authenticated %}
+    <ul class="navbar-nav flex-row ml-md-auto">
+      <li class="nav-item nav-link">{{ request.user.username }}</li>
+      <li class="nav-item">
+        <a class="btn btn-app-login d-inline-block mb-3 mb-md-0 ml-md-3" href="{% url 'logout' %}">
+          Logout
+        </a>
+      </li>
+    </ul>
+  {% else %}
+    <a class="btn btn-app-login flex-row ml-md-auto" href="{% url 'social:begin' 'mediawiki' %}">
+      Login
+    </a>
+  {% endif %}
+</header>

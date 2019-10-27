@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block title %}Documentation{% endblock %}
+{% block content %}
+  <h2>History Search Tool</h2>
+  <p>This is a tool that can be used by Administrators and Oversighters who are attempting to remove content that has been posted to a Wiki page, especially if they suspect that information has been posted more than once. The similar
+  "Blame" tool allows you to input a string that is currently present in an article, and find when it was first added. This tool instead finds <i>every revision</i> where that text was present.</p>
+  <p>The main reason why you would use this is if you find some suppressible content in an article, and suspect that it may have been added previously. This is most often useful for deadnames and other personally identifiable
+  information, but it can work for anything that you are able to write a RegEx for.</p>
+  <p>This tool <i>also</i> provides direct links to the history page with all of the necessary checkboxes already ticked, so you can click on the "Change visibility of selected revisions" button directly, rather than selecting each
+  revision manually. This feature requires the installation of the <a href="https://en.wikipedia.org/wiki/User:Enterprisey/url-select-revdel.js">url-select-revdel</a> script by Enterprisey, which can be accomplished by adding the
+  following text to your common.js (<a href="https://en.wikipedia.org/wiki/Special:MyPage/common.js">link for enwiki users</a>).</p>
+  <pre>{% verbatim %}{{subst:iusc|User:Enterprisey/url-select-revdel.js}}{% endverbatim %}</pre>
+  <h2>Maintainer and Source</h2>
+  <p>This tool is written in Python using <a href="https://djangoproject.com">Django</a> and <a href="https://www.mediawiki.org/wiki/Manual:Pywikibot">Pywikibot</a>, and is maintained by <a href="https://en.wikipedia.org/wiki/User:ST47">ST47</a>. Source code is available on <a href="https://github.com/wiki-ST47/wiki-hist-search/">GitHub</a>.</p>
+  <h2>Logging In</h2>
+  <p>Logging in to this tool is <i>not required</i> for most use cases. It is helpful in two situations: If you are an Oversighter, and want to potentially Oversight edits that are already RevDeled; or, if you are an Admin or Bot and
+  wish to take advantage of the larger query limits afforded to those users. If you are an Admin, logging in allows the tool to retrieve RevDeled text and edit summaries - this usually isn't helpful to admins, since they don't need to
+  delete things that are already deleted, but it is useful to Oversighters. (This tool will <i>never</i> retrieve Oversighed text or edit summaries.) If you are an Admin or Bot, you can query the API 5000 revisions at a time rather
+  than 500. Pywikibot handles "splitting up" the API requests for us, but it's still faster to make one request instead of ten.</p>
+  <h2>Bookmarks</h2>
+  <p>Please bookmark the <a href="{% url 'home' %}">Homepage</a> for normal usage of this tool. However, all of the parameters as passed as "GET" parameters - as part of the URL - so if you want to bookmark a specific query and check
+  back periodically, in case of repeat vandalism, you can do so. Please keep the "Number of revisions" to a reasonable number when doing so, both to speed up your own queries and to minimize server load.</p>
+  <h2>Options</h2>
+  <dl>
+    <dt>Page name to search</dt>
+    <dd>This is the name of the page we are looking at. It must be a page that presently exists - this tool does not look at deleted revisions. (It does look at RevDeled revisions, see below.)</dd>
+    <dt>Search query</dt>
+    <dd>This is the text we are searching for. By default, it is a case-insensitive regex, so keep in mind that characters like brackets, pipes, plus, asterisk, and period, have special uses. You may want to disable regex treatment if
+    you are searching for a string of wikitext markup.</dd>
+    <dt>Case-insensitive searching</dt>
+    <dd>Performs a case-insensitive search when enabled, which is the default. Otherwise, performs a case-sensitive search.</dd>
+    <dt>Treat as RegEx</dt>
+    <dd>Performs a regex search when enabled, which is the default. Otherwise, performs a simple "string contains" search.</dd>
+    <dt>Path to the wiki</dt>
+    <dd>This must be the domain name of the wiki you intend to use, formatted like "en.wikipedia.org", with <i>no</i> "https://" or "/wiki/". English Wikipedia is the default.</dd>
+    <dt>Start at revision ID</dt>
+    <dd>Start at a given revision ID, and only search revisions <i>older</i> than that one. Default is to start at the most recent revision.</dd>
+    <dt>Number of revisions to search</dt>
+    <dd>How many revisions to fetch in total. Increasing this will cause substantially greater page load times.</dd>
+    <dt>Include RevDeled revisions</dt>
+    <dd>Should revisions with matching text or summaries, which have been RevDeled, but not Oversighted, be marked as "red" and included in the links of revisions to be RevDeled/Oversighted? Non-oversighters will almost always want to
+    <i>disable</i> this, unless they are specificially interested in searching through deleted revision content. Oversighters will want to disable this when searching for content that requires RevDel, but enable it when searching for
+    content that requires Oversight.</dd>
+  </dl>
+{% endblock %}

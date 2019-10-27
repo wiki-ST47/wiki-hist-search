@@ -1,0 +1,86 @@
+// Variable overrides for theming
+$primary: #339966;
+$theme-colors: (
+  primary: $primary,
+  primary-l: lighten($primary, 10%),
+  light: #f0f2f6,
+);
+
+// Now we load Bootstrap
+@import "bootstrap/scss/bootstrap";
+
+// General theming and layout
+
+// Header is the top bar, it is laid out as a flex row or column depending on
+// screen size.
+header {
+  background-color: $primary;
+  // Set min height so that we can set the sidebar height to add up to 100vh
+  min-height: 4rem;
+
+  // Login/Logout button
+  .btn-app-login {
+    font-weight: 500;
+    color: #ffe484;
+    border-color: #ffe484;
+  }
+
+  // Override position of nav-links to align text. Naturally both paddings are
+  // 0.5rem.
+  .nav-link {
+    padding-top: 0.625rem;
+    padding-bottom: 0.375rem;
+  }
+}
+
+// Superscript text for messages like BETA, NEW, etc
+.text-beta {
+  color: $warning;
+  font-size: 9px;
+  font-weight: bold;
+  position: relative;
+  text-transform: uppercase;
+  top: -3px;
+  vertical-align: top;
+}
+
+.form-error {
+  color: $danger;
+  font-weight: bold;
+}
+p.form-error {
+  background: $light url("../../static/img/icon_error.gif") center left no-repeat;
+  padding-left: 18px;
+}
+
+.btn-form.active {
+  @extend .btn-primary-l;
+}
+
+.btn-form:not(.active) {
+  @extend .btn-light;
+}
+
+.form-btn-group {
+  width: 100%;
+}
+
+th.revision {
+  padding-left: 0;
+  padding-right: 0;
+  min-width: 3em;
+}
+
+td.revision {
+  padding-left: 0;
+  padding-right: 0;
+  font-size: 16px;
+  font-family: monospace;
+  text-align: center;
+  &.revision_match.revision_handled {
+    background-color: #7fff7f;
+  }
+  &.revision_match:not(.revision_handled) {
+    background-color: #ff7f7f;
+  }
+}

@@ -1,0 +1,15 @@
+conf/dev_settings.py
+conf/prod_settings.py
+db.sqlite3
+.vagrant/
+venv/
+__pycache__/
+conf/gunicorn_config.py
+*.pyc
+static_root/
+package-lock.json
+node_modules/
+apicache-py3/
+pywikibot.lwp
+pywikibot/
+throttle.ctrl
