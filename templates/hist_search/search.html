@@ -38,9 +38,9 @@
           <td class="revision {% if rev.match_es %}revision_match {% if rev.es_handled %}revision_handled{% endif %}{% endif %}">
             {% if rev.commenthidden %}{% if rev.suppressed %}OS{% else %}RD{% endif %}{% endif %}
           </td>
-          <td>
+          <td class="timestamp">
             <a href="{{ indexphp }}?oldid={{ rev.rev.revid }}&diff=prev">(prev)</a> |
-            <a href="{{ indexphp }}?oldid={{ rev.rev.revid }}">{{ rev.rev.timestamp }}</a>
+            <a href="{{ indexphp }}?oldid={{ rev.rev.revid }}">{{ rev.rev.timestamp | date:'H:i, j M Y' }}</a>
           </td>
           <td>
             <a href="{{ indexphp }}?title=User:{{ rev.rev.user }}">{{ rev.rev.user }}</a>
