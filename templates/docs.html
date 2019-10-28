@@ -41,5 +41,8 @@
     <dd>Should revisions with matching text or summaries, which have been RevDeled, but not Oversighted, be marked as "red" and included in the links of revisions to be RevDeled/Oversighted? Non-oversighters will almost always want to
     <i>disable</i> this, unless they are specificially interested in searching through deleted revision content. Oversighters will want to disable this when searching for content that requires RevDel, but enable it when searching for
     content that requires Oversight.</dd>
+    <dt>Only return matching rows</dt>
+    <dd>This only includes revisions that match your search string in the response, saving bandwidth between your computer and the toolforge. The performance improvement is marginal, as most of the time is spent retrieving the data
+    from the MediaWiki API, but this option may be helpful for large page histories and users with slow internet connections.</dd>
   </dl>
 {% endblock %}

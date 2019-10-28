@@ -24,15 +24,23 @@ class SearchForm(forms.Form):
         choices=(("OS", "Yes"), ("RD", "No")),
         initial='OS',
     )
-    case_insensitive = forms.ChoiceField(
+    case_insensitive = forms.TypedChoiceField(
         label="Case-insensitive searching?",
         choices=((True, "Yes"), (False, "No")),
         initial=True,
+        coerce=lambda x: x == 'True',
     )
-    regex_search = forms.ChoiceField(
+    regex_search = forms.TypedChoiceField(
         label="Treat as RegEx?",
         choices=((True, "Yes"), (False, "No")),
         initial=True,
+        coerce=lambda x: x == 'True',
+    )
+    return_matches = forms.TypedChoiceField(
+        label="Only return matching rows?",
+        choices=((True, "Yes"), (False, "No")),
+        initial=False,
+        coerce=lambda x: x == 'True',
     )
 
     def __init__(self, *args, **kwargs):

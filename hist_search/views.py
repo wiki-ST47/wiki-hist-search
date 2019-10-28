@@ -90,6 +90,7 @@ def search(request):
 
         # Actually perform the searching
         revlist = []
+        last_revid = None
         active_rev_flag = active_es_flag = False
         active_rev_track = active_es_track = None
         revdel_rev_string = revdel_es_string = ''
@@ -109,6 +110,8 @@ def search(request):
             else:
                 def string_compare(search, text):
                     return search.lower() in text.lower()
+
+        return_matches = form.cleaned_data.get('return_matches', False)
 
         for rev in revisions:
             revd = {}
@@ -151,7 +154,8 @@ def search(request):
             revd['commenthidden'] = rev.commenthidden
             revd['suppressed'] = rev.suppressed
             revd['rev'] = rev
-            revlist.append(revd)
+            if (not return_matches) or match_rev or match_es:
+                revlist.append(revd)
 
             last_revid = rev.revid
 
