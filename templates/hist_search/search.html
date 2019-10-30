@@ -3,13 +3,26 @@
 {% block content %}
   {% include 'hist_search/search_form.html' with form=form %}
 
-  <p>To use the following "quick" links, you need <a href="https://en.wikipedia.org/wiki/User:Enterprisey/url-select-revdel.js">Enterprisey's URL-Select-RevDel script</a>.</p>
 
-  <div class="btn-toolbar" role="toolbar">
-    <a class="btn btn-outline-primary" href="{{ rev_url }}">Select {{ rev_count }} Matching Revisions</a>
-    <a class="btn btn-outline-primary" href="{{ es_url }}">Select {{ es_count }} Matching Edit Summaries</a>
-    <a class="btn btn-outline-secondary" href"{{ log_url }}">Don't forget to check the logs!</a>
-  </div>
+  {% if username %}
+    {% if matching_pages %}
+      <p>You can use the following links to search the history of each page with at least one match.</p>
+      <ul>
+        {% for page in matching_pages %}
+          <li>
+            <a href="{% url 'search' %}?page={{ page|urlencode }}&{{ qparams }}">{{ page }}</a>
+          </li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  {% else %}
+    <p>To use the following "quick" links, you need <a href="https://en.wikipedia.org/wiki/User:Enterprisey/url-select-revdel.js">Enterprisey's URL-Select-RevDel script</a>.</p>
+    <div class="btn-toolbar" role="toolbar">
+      <a class="btn btn-outline-primary mr-2" href="{{ rev_url }}">Select {{ rev_count }} Matching Revisions</a>
+      <a class="btn btn-outline-primary mr-2" href="{{ es_url }}">Select {{ es_count }} Matching Edit Summaries</a>
+      <a class="btn btn-outline-secondary" href"{{ log_url }}">Don't forget to check the logs!</a>
+    </div>
+  {% endif %}
 
   <p>Key: XX = Search term matched; RD = content already revdeled; OS = content already suppressed. Red background = match and not already OSed (not already RDed if "Include Revdeled revisions" is selected); green background = match and already OSed/RDed; white background = no match.<p>
 
@@ -19,7 +32,11 @@
         <th scope="col" class="revision" colspan="2">Text</th>
         <th scope="col" class="revision" colspan="2">Summ</th>
         <th scope="col">Timestamp</th>
-        <th scope="col">User</th>
+        {% if username %}
+          <th scope="col">User</th>
+        {% else %}
+          <th scope="col">User</th>
+        {% endif %}
         <th scope="col">Summary</th>
       </tr>
     </thead>
@@ -39,13 +56,20 @@
             {% if rev.commenthidden %}{% if rev.suppressed %}OS{% else %}RD{% endif %}{% endif %}
           </td>
           <td class="timestamp">
-            <a href="{{ indexphp }}?oldid={{ rev.rev.revid }}&diff=prev">(prev)</a> |
-            <a href="{{ indexphp }}?oldid={{ rev.rev.revid }}">{{ rev.rev.timestamp | date:'H:i, j M Y' }}</a>
+            <a href="{{ indexphp }}?unhide=1&oldid={{ rev.rev.revid }}&diff=prev">(prev)</a> |
+            {% if username %}
+              <a href="{{ indexphp }}?action=history&title={{ rev.title|urlencode }}">(hist)</a> |
+            {% endif %}
+            <a href="{{ indexphp }}?unhide=1&oldid={{ rev.rev.revid }}">{{ rev.rev.timestamp | date:'H:i, j M Y' }}</a>
           </td>
           <td>
-            <a href="{{ indexphp }}?title=User:{{ rev.rev.user }}">{{ rev.rev.user }}</a>
-            (<a href="{{ indexphp }}?title=User talk:{{ rev.rev.user }}">talk</a> |
-            <a href="{{ indexphp }}?title=Special:Contributions/{{ rev.rev.user }}">contribs</a>)
+            {% if username %}
+              <a href="{{ indexphp }}?title={{ rev.title|urlencode }}">{{ rev.title }}</a>
+            {% else %}
+              <a href="{{ indexphp }}?title=User:{{ rev.rev.user }}">{{ rev.rev.user }}</a>
+              (<a href="{{ indexphp }}?title=User talk:{{ rev.rev.user }}">talk</a> |
+              <a href="{{ indexphp }}?title=Special:Contributions/{{ rev.rev.user }}">contribs</a>)
+            {% endif %}
           </td>
           <td>
             {{ rev.rev.comment }}

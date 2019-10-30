@@ -20,6 +20,16 @@
   <h2>Bookmarks</h2>
   <p>Please bookmark the <a href="{% url 'home' %}">Homepage</a> for normal usage of this tool. However, all of the parameters as passed as "GET" parameters - as part of the URL - so if you want to bookmark a specific query and check
   back periodically, in case of repeat vandalism, you can do so. Please keep the "Number of revisions" to a reasonable number when doing so, both to speed up your own queries and to minimize server load.</p>
+  <h2>Contribs Search</h2>
+  <p>You can enter "Special:Contributions/USERNAME" as the page name in order to search a user's contributions. In this case, there are certain caveats:</p>
+  <ol>
+    <li>The search checks the revision text after each of their edits, so it will return edits where the text matched even before their change. This isn't a bug, it is the desired behavior.</li>
+    <li>The search also will not return any subsequent revisions that still contain the text. You must manually go to each page in question and evaluate what needs oversighting.</li>
+    <li>The search will be substantially slower than a single page search.</li>
+    <li>The "start at" and "number of revisions" fields may not behave correctly.</li>
+    <li>The "Enterprisey URL-Select-RevDel" links will not work.</li>
+    <li><i>However,</i> there will be a list of links in their place to perform a normal search of each page that returned at least one match.</li>
+  </ol>
   <h2>Options</h2>
   <dl>
     <dt>Page name to search</dt>

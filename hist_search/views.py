@@ -79,18 +79,28 @@ def search(request):
         else:
             revs_kwargs['total'] = total = 200
 
-        try:
-            page = pywikibot.Page(site, form.cleaned_data['page'])
-            # Adapted from Page.revisions(), which doesn't pass the args I need
-            page.site.loadrevisions(page, **revs_kwargs)
-            revisions = (page._revisions[rev] for rev in
-                         sorted(page._revisions, reverse=True)[:total])
+        pagename = form.cleaned_data['page']
+        is_contribs = False
+        if pagename.startswith('Special:Contributions/'):
+            username = pagename.replace('Special:Contributions/', '')
+            context['username'] = username
+
+            revisions = site.usercontribs(user=username, total=total)
             context['revisions'] = revisions
-        except pywikibot.exceptions.NoPage as e:
-            form.add_error('page',
-                f"Unable to find this page. {e.title} does not exist."
-            )
-            return render(request, 'index.html', context)
+            is_contribs = True
+        else:
+            try:
+                page = pywikibot.Page(site, form.cleaned_data['page'])
+                # Adapted from Page.revisions(), which doesn't pass the args I need
+                page.site.loadrevisions(page, **revs_kwargs)
+                revisions = (page._revisions[rev] for rev in
+                            sorted(page._revisions, reverse=True)[:total])
+                context['revisions'] = revisions
+            except pywikibot.exceptions.NoPage as e:
+                form.add_error('page',
+                    f"Unable to find this page. {e.title} does not exist."
+                )
+                return render(request, 'index.html', context)
 
         # Actually perform the searching
         revlist = []
@@ -117,8 +127,24 @@ def search(request):
 
         return_matches = form.cleaned_data.get('return_matches', False)
 
+        if is_contribs:
+            # Build a list of pages with content now, more efficient that way
+            pagelist = {}
+            revs_kwargs = {'content': True, 'total': total, 'user': username}
+            pages_needed = [rev['title'] for rev in revisions]
+            for pagename in pages_needed:
+                page = pywikibot.Page(site, pagename)
+                page.site.loadrevisions(page, **revs_kwargs)
+                pagelist[pagename] = page
+            matching_pages = []
+
         for rev in revisions:
             revd = {}
+            if is_contribs:
+                revd['title'] = rev['title']
+                page = pagelist[rev['title']]
+                rev = page._revisions[rev['revid']]
+
             text = page.getOldVersion(rev.revid)
 
             revdeled_rev = rev.texthidden and (rev.suppressed or intent != 'OS')
@@ -150,6 +176,9 @@ def search(request):
                         revdel_es_string = '|' + revdel_es_string
                     revdel_es_string = new_string + revdel_es_string
 
+            if is_contribs and (match_rev or match_es) and revd['title'] not in matching_pages:
+                matching_pages.append(revd['title'])
+
             revd['match_rev'] = match_rev
             revd['rev_handled'] = revdeled_rev
             revd['texthidden'] = rev.texthidden
@@ -165,6 +194,10 @@ def search(request):
 
         page_name_encoded = urllib.parse.quote(form.cleaned_data.get('page').replace(' ', '_'))
         context['revlist'] = revlist
+        if is_contribs:
+            context['matching_pages'] = matching_pages
+            query = request.META['QUERY_STRING']
+            context['qparams'] = re.sub(r'&?page=[^&]+', '', query)
         indexphp = 'https:' + site.siteinfo['server'] + site.siteinfo['script']
         context['rev_url'] = f"{indexphp}?title={page_name_encoded}&action=history&limit={total}&revdel_select={revdel_rev_string}"
         context['es_url'] = f"{indexphp}?title={page_name_encoded}&action=history&limit={total}&revdel_select={revdel_es_string}"
