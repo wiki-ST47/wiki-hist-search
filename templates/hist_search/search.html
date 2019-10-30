@@ -8,9 +8,9 @@
     {% if matching_pages %}
       <p>You can use the following links to search the history of each page with at least one match.</p>
       <ul>
-        {% for page in matching_pages %}
+        {% for key, page in matching_pages %}
           <li>
-            <a href="{% url 'search' %}?page={{ page|urlencode }}&{{ qparams }}">{{ page }}</a>
+            <a href="{% url 'search' %}?page={{ page.title|urlencode }}&amp;{{ qparams }}">{{ page.title }}</a> ({{ page.count }} match{{ page.count|pluralize:'es' }} from {{ page.first|date:'H:i j M Y' }} to {{ page.last|date:'H:i j M Y' }})
           </li>
         {% endfor %}
       </ul>

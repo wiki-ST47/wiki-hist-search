@@ -136,7 +136,7 @@ def search(request):
                 page = pywikibot.Page(site, pagename)
                 page.site.loadrevisions(page, **revs_kwargs)
                 pagelist[pagename] = page
-            matching_pages = []
+            matching_pages = {}
 
         for rev in revisions:
             revd = {}
@@ -176,8 +176,20 @@ def search(request):
                         revdel_es_string = '|' + revdel_es_string
                     revdel_es_string = new_string + revdel_es_string
 
-            if is_contribs and (match_rev or match_es) and revd['title'] not in matching_pages:
-                matching_pages.append(revd['title'])
+            if is_contribs and (match_rev or match_es):
+                if revd['title'] in matching_pages:
+                    matching_pages[revd['title']]['count'] += 1
+                    if rev.timestamp < matching_pages[revd['title']]['first']:
+                        matching_pages[revd['title']]['first'] = rev.timestamp
+                    if rev.timestamp > matching_pages[revd['title']]['last']:
+                        matching_pages[revd['title']]['last'] = rev.timestamp
+                else:
+                    matching_pages[revd['title']] = {
+                        'title': revd['title'],
+                        'first': rev.timestamp,
+                        'last': rev.timestamp,
+                        'count': 1,
+                    }
 
             revd['match_rev'] = match_rev
             revd['rev_handled'] = revdeled_rev
