@@ -17,8 +17,12 @@ def index(request):
 
 def docs(request):
     context = {}
-    context['form'] = SearchForm()
     return render(request, 'docs.html', context)
+
+
+def tools(request):
+    context = {}
+    return render(request, 'tools.html', context)
 
 
 def search(request):

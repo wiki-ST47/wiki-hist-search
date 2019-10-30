@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% block title %}Related Tools{% endblock %}
+{% block content %}
+  <table class="table">
+    <thead>
+      <th>IP Intel</th>
+      <th>SPI Help</th>
+      <th>Search Tools</th>
+      <th>Other Tools</th>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          {% include 'includes/tool-link.html' with name="WHOIS" url="https://tools.wmflabs.org/whois/gateway.py?" %}
+        </td>
+        <td>
+          {% include 'includes/tool-link.html' with name="EIA" url="https://tools.wmflabs.org/sigma/editorinteract.py" %}
+        </td>
+        <td>
+          {% include 'includes/tool-link.html' with name="History Search" url="https://tools.wmflabs.org/histsearch/" %}
+        </td>
+        <td>
+          {% include 'includes/tool-link.html' with name="Copyvio" url="https://tools.wmflabs.org/copyvios/?lang=en&project=wikipedia" %}
+        </td>
+      </tr>
+      <tr>
+        <td>
+          {% include 'includes/tool-link.html' with name="Proxy Check" url="https://tools.wmflabs.org/ipcheck/index.php" %}
+        </td>
+        <td>
+          {% include 'includes/tool-link.html' with name="Editing Time" url="http://project.paragram.org/wpuser/index.php" %}
+        </td>
+        <td>
+          {% include 'includes/tool-link.html' with name="Username Search" url="https://tools.wmflabs.org/usernamesearch/" %}
+        </td>
+        <td>
+          {% include 'includes/tool-link.html' with name="" url="" %}
+        </td>
+      </tr>
+      <tr>
+        <td>
+          {% include 'includes/tool-link.html' with name="Rangeblock Finder" url="https://tools.wmflabs.org/rangeblockfinder/" %}
+        </td>
+        <td>
+          {% include 'includes/tool-link.html' with name="Timeline" url="https://tools.wmflabs.org/interaction-timeline?wiki=enwiki" %}
+        </td>
+        <td>
+          {% include 'includes/tool-link.html' with name="" url="" %}
+        </td>
+        <td>
+          {% include 'includes/tool-link.html' with name="" url="" %}
+        </td>
+      </tr>
+      <tr>
+        <td>
+          {% include 'includes/tool-link.html' with name="RangeCalc" url="https://nativeforeigner.com/calc/" %}
+        </td>
+        <td>
+          {% include 'includes/tool-link.html' with name="" url="" %}
+        </td>
+        <td>
+          {% include 'includes/tool-link.html' with name="" url="" %}
+        </td>
+        <td>
+          {% include 'includes/tool-link.html' with name="" url="" %}
+        </td>
+      </tr>
+      <tr>
+        <td>
+          {% include 'includes/tool-link.html' with name="" url="" %}
+        </td>
+        <td>
+          {% include 'includes/tool-link.html' with name="" url="" %}
+        </td>
+        <td>
+          {% include 'includes/tool-link.html' with name="" url="" %}
+        </td>
+        <td>
+          {% include 'includes/tool-link.html' with name="" url="" %}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+{% endblock %}

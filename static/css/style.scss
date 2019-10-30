@@ -4,6 +4,7 @@ $theme-colors: (
   primary: $primary,
   primary-l: lighten($primary, 10%),
   light: #f0f2f6,
+  blue: #007bff,
 );
 
 // Now we load Bootstrap
@@ -87,4 +88,8 @@ td.revision {
 
 td.timestamp {
   white-space: nowrap;
+}
+
+.tool-link {
+  min-width: 8em;
 }
