@@ -5,7 +5,7 @@ django-compressor==2.3
 django-sass-processor==0.7.4
 gunicorn==19.9.0
 libsass==0.19.3
-mwoauth==0.3.6
+mwoauth==0.3.7
 oauthlib==3.1.0
 PyJWT==1.7.1
 pylama==7.7.1
