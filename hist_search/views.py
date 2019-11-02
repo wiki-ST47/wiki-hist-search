@@ -210,6 +210,10 @@ def search(request):
             context['matching_pages'] = matching_pages
             query = request.META['QUERY_STRING']
             context['qparams'] = re.sub(r'&?page=[^&]+', '', query)
+        if not is_contribs:
+            query = request.META['QUERY_STRING']
+            query = re.sub(r'&?start_id=[^&]*', '', query)
+            context['continue'] = query + '&start_id=' + str(last_revid)
         indexphp = 'https:' + site.siteinfo['server'] + site.siteinfo['script']
         context['rev_url'] = f"{indexphp}?title={page_name_encoded}&action=history&limit={total}&revdel_select={revdel_rev_string}"
         context['es_url'] = f"{indexphp}?title={page_name_encoded}&action=history&limit={total}&revdel_select={revdel_es_string}"

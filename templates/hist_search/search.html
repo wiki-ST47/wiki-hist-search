@@ -20,7 +20,10 @@
     <div class="btn-toolbar" role="toolbar">
       <a class="btn btn-outline-primary mr-2" href="{{ rev_url }}">Select {{ rev_count }} Matching Revisions</a>
       <a class="btn btn-outline-primary mr-2" href="{{ es_url }}">Select {{ es_count }} Matching Edit Summaries</a>
-      <a class="btn btn-outline-secondary" href"{{ log_url }}">Don't forget to check the logs!</a>
+      <a class="btn btn-outline-secondary mr-2" href"{{ log_url }}">Don't forget to check the logs!</a>
+      {% if continue %}
+        <a class="btn btn-outline-primary mr-2" href="{% url 'search' %}?{{ continue }}">Next page of history</a>
+      {% endif %}
     </div>
   {% endif %}
 
