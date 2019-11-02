@@ -1,5 +1,4 @@
 from django import forms
-import pywikibot
 
 
 class SearchForm(forms.Form):
