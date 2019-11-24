@@ -112,11 +112,11 @@ def search(request):
         intent = form.cleaned_data.get('intent')
         search = form.cleaned_data.get('search')
         if form.cleaned_data.get('regex_search'):
-            re_args = []
+            re_kwargs = {}
             if form.cleaned_data.get('case_insensitive'):
-                re_args.append(re.IGNORECASE)
+                re_kwargs['flags'] = re.IGNORECASE
             def string_compare(search, text):
-                return re.search(search, text)
+                return re.search(search, text, **re_kwargs)
         else:
             if form.cleaned_data.get('case_insensitive'):
                 def string_compare(search, text):
