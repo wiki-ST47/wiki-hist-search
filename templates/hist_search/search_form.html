@@ -53,7 +53,7 @@
   </div>
   <div class="form-row">
     {% with form.wiki_url as this_field %}
-      <div class="form-group col-md-3">
+      <div class="form-group col-md-2">
         <label for="id_{{ this_field.html_name }}">{{ this_field.label }}</label>
         {% if this_field.errors %}<span class="form-error">{% for error in this_field.errors %}{{ error }}{% if not forloop.last %}<br>{% endif %}{% endfor %}</span>{% endif %}
         <input type="text" class="form-control" name="{{ this_field.html_name }}" id="id_{{ this_field.html_name }}" {% if this_field.value %}value="{{ this_field.value }}"{% endif %} placeholder="en.wikipedia.org">
@@ -61,7 +61,7 @@
       </div>
     {% endwith %}
     {% with form.start_id as this_field %}
-      <div class="form-group col-md-3">
+      <div class="form-group col-md-2">
         <label for="id_{{ this_field.html_name }}">{{ this_field.label }}</label>
         {% if this_field.errors %}<span class="form-error">{% for error in this_field.errors %}{{ error }}{% if not forloop.last %}<br>{% endif %}{% endfor %}</span>{% endif %}
         <input type="number" class="form-control" name="{{ this_field.html_name }}" id="id_{{ this_field.html_name }}" {% if this_field.value %}value="{{ this_field.value }}"{% endif %} placeholder="latest">
@@ -103,6 +103,21 @@
           {% endfor %}
         </div>
         <small class="form-text text-muted">This can be slightly faster on very slow connections.</small>
+      </div>
+    {% endwith %}
+    {% with form.verify_hidden_user as this_field %}
+      <div class="form-group col-md-2">
+        <label for="id_{{ this_field.html_name }}_wrap">{{ this_field.label }}</label>
+        {% if this_field.errors %}<span class="form-error">{% for error in this_field.errors %}{{ error }}{% if not forloop.last %}<br>{% endif %}{% endfor %}</span>{% endif %}
+        <div class="btn-group btn-group-toggle form-btn-group" id="id_{{ this_field.html_name }}_wrap" data-toggle="buttons">
+          {% for choice in this_field %}
+            <label class="btn btn-form {% if choice.data.selected %}active{% endif %}">
+              <input type="radio" name="{{ this_field.html_name }}" value="{{ choice.data.value }}" autocomplete="off" {% if choice.data.selected %}checked{% endif %}>
+              {{ choice.data.label }}
+            </label>
+          {% endfor %}
+        </div>
+        <small class="form-text text-muted">Enter the username as the search query, and leave the page name blank.</small>
       </div>
     {% endwith %}
   </div>
