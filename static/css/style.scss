@@ -84,10 +84,20 @@ td.revision {
   &.revision_match:not(.revision_handled) {
     background-color: #ff7f7f;
   }
+  min-width: 1.6em;
+}
+
+td.change_visibility_link {
+  width: 5em;
 }
 
 td.timestamp {
   white-space: nowrap;
+}
+
+td.wide_col {
+  max-width: 20em;
+  word-wrap: break-word;
 }
 
 .tool-link {

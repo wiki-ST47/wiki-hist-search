@@ -6,7 +6,10 @@ class SearchForm(forms.Form):
         label="Path to the wiki",
         required=False,
     )
-    page = forms.CharField(label="Page name to search")
+    page = forms.CharField(
+        label="Page name to search",
+        required=False,
+    )
     search = forms.CharField(
         label="Search query",
     )
@@ -37,6 +40,12 @@ class SearchForm(forms.Form):
     )
     return_matches = forms.TypedChoiceField(
         label="Only return matching rows?",
+        choices=((True, "Yes"), (False, "No")),
+        initial=False,
+        coerce=lambda x: x == 'True',
+    )
+    verify_hidden_user = forms.TypedChoiceField(
+        label="Verify that a username is fully hidden?",
         choices=((True, "Yes"), (False, "No")),
         initial=False,
         coerce=lambda x: x == 'True',
