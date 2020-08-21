@@ -1,0 +1,148 @@
+{% extends 'base.html' %}
+{% block title %}Search Results{% endblock %}
+{% block content %}
+  {% include 'hist_search/search_form.html' with form=form %}
+
+  <br>
+  <span>Key:</span>
+  <ul>
+    <li>Text/Tgt: text of a revision, action and target of a log entry. User: actor. Summ: edit summary or log entry comment, summary or text of an abusefilter hit.</li>
+    <li>XX = Search term matched; RD = content already revdeled; OS = content already suppressed.</li>
+    <li>Red background = match and not already OSed (not already RDed if "Include Revdeled revisions" is selected); green background = match and already OSed/RDed; white background = no match.</li>
+  </ul>
+  <br>
+  <span>What does this find:</span>
+  <ul>
+    <li>All log entries where the user is the "actor"</li>
+    <li>All log entries where the user, their userpage, or their talk page, is the "target"</li>
+    <li>All edits or filter hits made by the user</li>
+    <li>All edits or filter hits to the user's userpage or talk page</li>
+    <li>All edits which mention the user in any field, as long as they happened <i>after</i> the target user edited the same article (e.g., if someone reverted the user)</li>
+  </ul>
+  <br>
+  <span>What does this <b>not</b> find:</span>
+  <ul>
+    <li>Edits to pages that this user never edited, or edits from before this user edited the given page</li>
+    <li>Edits or log entries pertaining to subpages of the user's userpage or user talk page</li>
+    <li>Edits to pages which have already been deleted</li>
+  </ul>
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col" class="revision" colspan="2">Text/Tgt</th>
+        <th scope="col" class="revision" colspan="2">User</th>
+        <th scope="col" class="revision" colspan="2">Summ</th>
+        <th scope="col">Change Visibility</th>
+        <th scope="col">Timestamp</th>
+        <th scope="col">Action</th>
+        <th scope="col">Target</th>
+        <th scope="col">User</th>
+        <th scope="col">Summary</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for rev in revlist %}
+        <tr>
+          {% if rev.is_log %}
+            <td class="revision {% if rev.match_target %}revision_match {% if rev.target_handled %}revision_handled{% endif %}{% endif %}">
+              {% if rev.match_target %}XX{% endif %}
+            </td>
+            <td class="revision {% if rev.match_target %}revision_match {% if rev.target_handled %}revision_handled{% endif %}{% endif %}">
+              {% if rev.target_hidden %}{% if rev.suppressed %}OS{% else %}RD{% endif %}{% endif %}
+            </td>
+            <td class="revision {% if rev.match_user %}revision_match {% if rev.user_handled %}revision_handled{% endif %}{% endif %}">
+              {% if rev.match_user %}XX{% endif %}
+            </td>
+            <td class="revision {% if rev.match_user %}revision_match {% if rev.user_handled %}revision_handled{% endif %}{% endif %}">
+              {% if rev.user_hidden %}{% if rev.suppressed %}OS{% else %}RD{% endif %}{% endif %}
+            </td>
+            <td class="revision {% if rev.match_comment %}revision_match {% if rev.comment_handled %}revision_handled{% endif %}{% endif %}">
+              {% if rev.match_comment %}XX{% endif %}
+            </td>
+            <td class="revision {% if rev.match_comment %}revision_match {% if rev.comment_handled %}revision_handled{% endif %}{% endif %}">
+              {% if rev.comment_hidden %}{% if rev.suppressed %}OS{% else %}RD{% endif %}{% endif %}
+            </td>
+            <td class="change_visibility_link">
+              <a href="{{ rev.change_visibility }}">(change visibility)</a>
+            </td>
+            <td class="timestamp">
+              {% if rev.is_afl %}
+                <a href="{{ indexphp }}?title=Special:AbuseLog/{{ rev.le.id }}">{{ rev.format_timestamp | date:'H:i, j M Y' }}</a>
+              {% else %}
+                <a href="{{ indexphp }}?title=Special:Log&logid={{ rev.le.data.logid }}">{{ rev.le.timestamp | date:'H:i, j M Y' }}</a>
+              {% endif %}
+            </td>
+            <td>
+              {% if rev.is_afl %}
+                filter/{{ rev.filter_id }}
+              {% else %}
+                {{ rev.le.data.type }}/{{ rev.le.data.action }}
+              {% endif %}
+            </td>
+            <td class="wide_col">
+              <a href="{{ indexphp }}?title={{ rev.title|urlencode }}">{{ rev.title }}</a>
+            </td>
+            <td class="wide_col">
+              <a href="{{ indexphp }}?title=User:{{ rev.user }}">{{ rev.user }}</a>
+              (<a href="{{ indexphp }}?title=User talk:{{ rev.user }}">talk</a> |
+              <a href="{{ indexphp }}?title=Special:Contributions/{{ rev.user }}">contribs</a>)
+            </td>
+            <td class="wide_col">
+              {% if rev.is_afl %}
+                {{ rev.le.details.summary }}
+              {% else %}
+                {{ rev.le.data.comment }}
+              {% endif %}
+            </td>
+          {% else %}
+            <td class="revision {% if rev.match_text %}revision_match {% if rev.text_handled %}revision_handled{% endif %}{% endif %}">
+              {% if rev.match_text %}XX{% endif %}
+            </td>
+            <td class="revision {% if rev.match_text %}revision_match {% if rev.text_handled %}revision_handled{% endif %}{% endif %}">
+              {% if rev.text_hidden %}{% if rev.suppressed %}OS{% else %}RD{% endif %}{% endif %}
+            </td>
+            <td class="revision {% if rev.match_user %}revision_match {% if rev.user_handled %}revision_handled{% endif %}{% endif %}">
+              {% if rev.match_user %}XX{% endif %}
+            </td>
+            <td class="revision {% if rev.match_user %}revision_match {% if rev.user_handled %}revision_handled{% endif %}{% endif %}">
+              {% if rev.user_hidden %}{% if rev.suppressed %}OS{% else %}RD{% endif %}{% endif %}
+            </td>
+            <td class="revision {% if rev.match_comment %}revision_match {% if rev.comment_handled %}revision_handled{% endif %}{% endif %}">
+              {% if rev.match_comment %}XX{% endif %}
+            </td>
+            <td class="revision {% if rev.match_comment %}revision_match {% if rev.comment_handled %}revision_handled{% endif %}{% endif %}">
+              {% if rev.comment_hidden %}{% if rev.suppressed %}OS{% else %}RD{% endif %}{% endif %}
+            </td>
+            <td class="change_visibility_link">
+              <a href="{{ rev.change_visibility }}">(change visibility)</a>
+            </td>
+            <td class="timestamp">
+              <a href="{{ indexphp }}?unhide=1&oldid={{ rev.rev.revid }}&diff=prev">(prev)</a> |
+              <a href="{{ indexphp }}?action=history&title={{ rev.rev.title|urlencode }}">(hist)</a><br>
+              <a href="{{ indexphp }}?unhide=1&oldid={{ rev.rev.revid }}">{{ rev.format_timestamp | date:'H:i, j M Y' }}</a>
+            </td>
+            <td>
+              {% if rev.is_deleted %}
+                deleted edit
+              {% else %}
+                edit
+              {% endif %}
+            </td>
+            <td class="wide_col">
+              <a href="{{ indexphp }}?title={{ rev.title|urlencode }}">{{ rev.title }}</a>
+            </td>
+            <td class="wide_col">
+              <a href="{{ indexphp }}?title=User:{{ rev.rev.user }}">{{ rev.rev.user }}</a>
+              (<a href="{{ indexphp }}?title=User talk:{{ rev.rev.user }}">talk</a> |
+              <a href="{{ indexphp }}?title=Special:Contributions/{{ rev.rev.user }}">contribs</a>)
+            </td>
+            <td class="wide_col">
+              {{ rev.rev.comment }}
+            </td>
+          {% endif %}
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}
