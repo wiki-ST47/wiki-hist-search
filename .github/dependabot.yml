@@ -1,0 +1,27 @@
+version: 2
+updates:
+- package-ecosystem: pip
+  directory: "/etc"
+  schedule:
+    interval: daily
+  open-pull-requests-limit: 10
+  ignore:
+  - dependency-name: django-sass-processor
+    versions:
+    - 0.8.2
+    - 1.0.0
+  - dependency-name: social-auth-core
+    versions:
+    - 4.0.3
+  - dependency-name: cffi
+    versions:
+    - 1.14.4
+  - dependency-name: django-compressor
+    versions:
+    - "2.4"
+  - dependency-name: django
+    versions:
+    - "3.0"
+  - dependency-name: gunicorn
+    versions:
+    - 20.0.4
